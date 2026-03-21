@@ -33,7 +33,7 @@ func (s *Session) UserID() int {
 	return s.userId
 }
 
-func IsAdmin() specify.Condition[*Session] {
+func IsAdmin() specify.ConditionFunc[*Session] {
 	return specify.ConditionFunc[*Session](func(s *Session) (bool, error) {
 		return s.isAdmin && s.age > 18, nil
 	})
@@ -46,7 +46,7 @@ func IsBanned() specify.Condition[*Session] {
 }
 
 func IsValidAdmin() specify.Condition[*Session] {
-	return IsAdmin().And(IsBanned().Not())
+	return IsAdmin().And(specify.Not(IsBanned()))
 }
 
 func IsValidAdminPimitive(s *Session) (bool, error) {
