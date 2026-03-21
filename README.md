@@ -1,5 +1,6 @@
 Specify
 =======
+[![Go Reference](https://pkg.go.dev/badge/github.com/MovieStoreGuy/specify.svg)](https://pkg.go.dev/github.com/MovieStoreGuy/specify)
 
 This library allows for abstracted business for validating conditions are met using the [Specification Pattern]. 
 
