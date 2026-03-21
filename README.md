@@ -29,7 +29,7 @@ import (
     "github.com/MovieStoreGuy/specify"
 )
 
-func AccountExists(db *sql.DB) specify.Condition[*AccountDetails] {
+func AccountExists(db *sql.DB) specify.ConditionFunc[*AccountDetails] {
     return specify.ConditionFunc[*AccountDetails](func(account *AccountDetails) (bool, error){ 
         rows, err := db.query("valid query here...", account.Username())
         if err != nil {
@@ -55,13 +55,13 @@ func AccountAdmin() specify.Condition[*AccountDetails] {
 // IsValidAccount ensure that the account exists first and validates that the account is not suspended
 // by chaining the above functions.
 func IsValidAccount(db *sql.DB) specify.Condition[*AccountDetails] {
-    return AccountExists(db).And(AccountSuspended().Not())
+    return AccountExists(db).And(specify.Not(AccountSuspended()))
 }
 
 // IsValidAdmin extends the `IsValidAccount` by appending an 
 // additional condition to verify admin flags are set.
 func IsValidAdmin(db *sql.DB) specify.Condition[*AccountDetails] {
-    return IsValidAccount(db).And(AdminAccount())
+    return specify.And(IsValidAccount(db), AdminAccount())
 }
 ```
 

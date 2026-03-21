@@ -12,21 +12,30 @@ type Condition[T any] interface {
 	Check(input T) (result bool, err error)
 }
 
+// ConditionAnd is an extension to condition to allow for natural
+// reading condition statements when using `ConditionFunc`.
 type ConditionAnd[T any] interface {
 	Condition[T]
 
+	// And is an alias for `specify.And(this, b, others...)`
 	And(b Condition[T], others ...Condition[T]) Condition[T]
 }
 
+// ConditionOr is an extension to condition to allow for natural
+// reading condition statements when using `ConditionFunc`.
 type ConditionOr[T any] interface {
 	Condition[T]
 
+	// Or is an alias for `specify.Or(this, b, others ...)`
 	Or(b Condition[T], others ...Condition[T]) Condition[T]
 }
 
+// ConditionXor is an extension to condition to allow for natural
+// reading condition statements when using `ConditionFunc`.
 type ConditionXor[T any] interface {
 	Condition[T]
 
+	// Xor is an alias for `specify.Xor(this, b)`
 	Xor(b Condition[T]) Condition[T]
 }
 
