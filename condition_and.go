@@ -6,7 +6,7 @@ package specify
 // And lazily performs the logical and which will stop once false result is returned
 // from a provided condition.
 func And[T any](a, b Condition[T], conditions ...Condition[T]) Condition[T] {
-	return ConditionFunc[T](func(item T) (bool, error) {
+	return NewCondition(func(item T) (bool, error) {
 		for _, cond := range append([]Condition[T]{a, b}, conditions...) {
 			val, err := cond.Check(item)
 			if err != nil || !val {

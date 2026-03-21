@@ -50,6 +50,10 @@ var (
 	_ ConditionXor[any] = (*ConditionFunc[any])(nil)
 )
 
+func NewCondition[T any](check func(input T) (bool, error)) Condition[T] {
+	return ConditionFunc[T](check)
+}
+
 func (cond ConditionFunc[T]) Check(input T) (bool, error) {
 	return cond(input)
 }
