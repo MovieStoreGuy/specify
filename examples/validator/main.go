@@ -40,7 +40,7 @@ func IsAdmin() specify.ConditionFunc[*Session] {
 }
 
 func IsBanned() specify.Condition[*Session] {
-	return specify.ConditionFunc[*Session](func(s *Session) (bool, error) {
+	return specify.NewCondition(func(s *Session) (bool, error) {
 		return s.isBanned, nil
 	})
 }
@@ -54,12 +54,21 @@ func IsValidAdminPimitive(s *Session) (bool, error) {
 }
 
 func main() {
+	validator := specify.NewConditionalAction(
+		IsValidAdmin(),
+		specify.NewAction(func(user *Session) error {
+			fmt.Printf("Valid: User %x is a current admin\n", user.UserID())
+			return nil
+		}),
+	)
+
 	for _, user := range []*Session{
 		NewSession(func(s *Session) {
 			s.isBanned = true
 		}),
 		NewSession(func(s *Session) {
 			s.isAdmin = true
+			s.age = 24
 		}),
 		NewSession(func(s *Session) {
 			s.isAdmin = true
@@ -67,11 +76,8 @@ func main() {
 		}),
 		NewSession(),
 	} {
-		// Error is ignored for sake of brevity
-		if ok, _ := IsValidAdmin().Check(user); ok {
-			fmt.Printf("Valid: User %x is a current admin\n", user.UserID())
-		} else {
-			fmt.Printf("Invalid: User 0x%x is not a current admin\n", user.UserID())
+		if err := validator.Do(user); err != nil {
+			panic(err)
 		}
 	}
 

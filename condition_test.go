@@ -2,9 +2,3 @@
 // SPDX-License-Identifier: MIT
 
 package specify
-
-type TestableCondition struct {
-	result bool
-	err    error
-	called int
-}
